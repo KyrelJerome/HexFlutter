@@ -47,22 +47,9 @@ class MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
+      child: ListView(
         children: [
-          Container(
-            height: 100,
-            width: 100,
-            color: Colors.blue,
-          ),
-          HexagonContainer(
-            height: 100,
-            width: 100,
-            foregroundColor: Colors.black,
-          ),
-          HexagonFlex(5),
-          HexagonFlex(6),
-          HexagonFlex(6),
-          HexagonFlex(6),
+          HexagonFlex(6, children:[Text("Kyrel")]),
         ],
       ),
     );
