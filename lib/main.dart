@@ -49,7 +49,7 @@ class MainState extends State<Main> {
     return Center(
       child: ListView(
         children: [
-          HexagonFlex(6, children:[Text("Kyrel")]),
+          HexagonFlex(8, children:[Center(child: Text("Kyrel"))]),
         ],
       ),
     );

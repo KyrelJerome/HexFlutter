@@ -8,19 +8,19 @@ import 'HexShapeUtils.dart';
   specific spot
 */
 class HexagonFlex extends StatelessWidget {
-  final double hexWidth = 0;
-  final double hexHeight = 0;
-  final List<int> childIndices = const [];
+  final double hexWidth;
+  final double hexHeight;
+  final List<int> childIndices;
   // Children widget to be built into the children.
-  final List<Widget> children =  const [];
+  final List<Widget> children;
   // Total number of hexagons in the flex.
   final int totalHex;
-  final Orientation orientation = Orientation.landscape;
-  HexagonFlex(this.totalHex,{hexWidth = 0,
-        hexHeight = 0,
-        childIndices = const [],
-        children = const [],
-        orientation = Orientation.landscape}):super(key: key);
+  final Orientation orientation;
+  HexagonFlex(this.totalHex,{this.hexWidth = 0,
+        this.hexHeight = 0,
+        this.childIndices = const [],
+        this.children = const [],
+        this.orientation = Orientation.landscape});
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +36,22 @@ class HexagonFlex extends StatelessWidget {
         hexWidth == 0 ? constraints.biggest.width / totalHex : hexWidth;
     double tileHeight =
         hexHeight == 0 ? constraints.biggest.width / totalHex : hexHeight;
-    if (trueChildIndices == []) {
+    if (trueChildIndices.length == 0) {
       //Pad beginning
       int pad = (totalHex - children.length) ~/ 2;
       trueChildIndices = List.generate(children.length, (index) => pad + index);
+      print("pad: ${pad}");
+      print("children: ${children}");
     }
+    print("trueChildIndices: ${trueChildIndices}");
     print("Fine2");
     List<Widget> renderedChildren = [];
     // Build Hexagon Row
     int childIndex = 0;
     for (int i = 0; i < totalHex; i++) {
-      if ( 0< trueChildIndices.length &&i == trueChildIndices[childIndex]) {
+      if ( 0 < trueChildIndices.length && childIndex < children.length &&i == trueChildIndices[childIndex]) {
         renderedChildren.add(HexagonContainer(
-          foregroundColor: Colors.black,
+          foregroundColor: Colors.white,
           height: tileWidth,
           width: tileHeight,
           child: children[childIndex],
