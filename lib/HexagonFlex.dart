@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'HexContainer.dart';
@@ -8,6 +10,7 @@ import 'HexShapeUtils.dart';
   specific spot
 */
 class HexagonFlex extends StatelessWidget {
+  final bool isOffset;
   final double hexWidth;
   final double hexHeight;
   final List<int> childIndices;
@@ -16,44 +19,102 @@ class HexagonFlex extends StatelessWidget {
   // Total number of hexagons in the flex.
   final int totalHex;
   final Orientation orientation;
-  HexagonFlex(this.totalHex,{this.hexWidth = 0,
-        this.hexHeight = 0,
-        this.childIndices = const [],
-        this.children = const [],
-        this.orientation = Orientation.landscape});
+  HexagonFlex(this.totalHex,
+      {this.hexWidth = 0,
+      this.hexHeight = 0,
+      this.isOffset = false,
+      this.childIndices = const [],
+      this.children = const [],
+      this.orientation = Orientation.landscape})
+      : assert(children.length >= childIndices.length),
+        assert(
+          children.length < totalHex + (isOffset ? 1 : 0),
+        );
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: hexFlexBuilder,
+      builder: buildLayout,
     );
   }
 
-  Widget hexFlexBuilder(BuildContext context, BoxConstraints constraints) {
-    print("Fine");
-    List<int> trueChildIndices = childIndices;
+  Widget buildLayout(BuildContext context, BoxConstraints constraints) {
+    int hexDrawn = totalHex + (isOffset ? 1 : 0);
     double tileWidth =
-        hexWidth == 0 ? constraints.biggest.width / totalHex : hexWidth;
+        hexWidth == 0 ? constraints.biggest.width / hexDrawn : hexWidth;
     double tileHeight =
-        hexHeight == 0 ? constraints.biggest.width / totalHex : hexHeight;
+        hexHeight == 0 ? constraints.biggest.width / hexDrawn : hexHeight;
+
+    List<Widget> renderedChildren = populateRenderedChildren(
+      tileWidth,
+      widthToHeight(tileHeight),
+    );
+    // Build Hexagon Row
+    print("Size:" + tileWidth.toString());
+    print("Objects made:" + renderedChildren.length.toString());
+    if (isOffset) {
+      renderedChildren.insert(
+        0,
+        HexagonContainer(
+          type: HexType.RightHalf,
+          foregroundColor: Colors.black,
+          height: widthToHeight(tileWidth),
+          width: tileWidth,
+        ),
+      );
+      renderedChildren.add(
+        HexagonContainer(
+          type: HexType.LeftHalf,
+          foregroundColor: Colors.black,
+          height: widthToHeight(tileWidth),
+          width: tileHeight,
+        ),
+      );
+    }
+    // size = h/2
+    // size = w/sqrt(3)
+    // => h/2 = w/sqrt(3)
+    // => h = 2w/sqrt(3)
+    return Container(
+      height: widthToHeight(tileWidth),
+      width: tileWidth * hexDrawn,
+      child: Orientation.portrait == orientation
+          ? Column(
+              children: renderedChildren,
+            )
+          : Row(children: renderedChildren),
+    );
+  }
+
+  double widthToHeight(double width) {
+    return 2 * width / sqrt(3);
+  }
+
+  List<int> getTrueChildIndices() {
+    List<int> trueChildIndices = childIndices;
+
     if (trueChildIndices.length == 0) {
       //Pad beginning
       int pad = (totalHex - children.length) ~/ 2;
       trueChildIndices = List.generate(children.length, (index) => pad + index);
-      print("pad: ${pad}");
-      print("children: ${children}");
+      print("pad: $pad");
+      print("children: $children");
     }
-    print("trueChildIndices: ${trueChildIndices}");
-    print("Fine2");
+    return trueChildIndices;
+  }
+
+  List<Widget> populateRenderedChildren(tileWidth, tileHeight) {
     List<Widget> renderedChildren = [];
-    // Build Hexagon Row
+    List trueChildIndices = getTrueChildIndices();
     int childIndex = 0;
     for (int i = 0; i < totalHex; i++) {
-      if ( 0 < trueChildIndices.length && childIndex < children.length &&i == trueChildIndices[childIndex]) {
+      if (0 < trueChildIndices.length &&
+          childIndex < children.length &&
+          i == trueChildIndices[childIndex]) {
         renderedChildren.add(HexagonContainer(
-          foregroundColor: Colors.white,
-          height: tileWidth,
-          width: tileHeight,
+          foregroundColor: Colors.blue,
+          height: tileHeight,
+          width: tileWidth,
           child: children[childIndex],
         ));
         childIndex += 1;
@@ -61,22 +122,12 @@ class HexagonFlex extends StatelessWidget {
         renderedChildren.add(
           HexagonContainer(
             foregroundColor: Colors.black,
-            height: tileWidth,
-            width: tileHeight,
+            height: tileHeight,
+            width: tileWidth,
           ),
         );
       }
     }
-    print("Size:" + tileWidth.toString());
-    print("Objects made:"+ renderedChildren.length.toString() );
-    return Container(
-      height: tileWidth,
-      width: tileWidth*totalHex,
-      child: Orientation.portrait == orientation
-          ? Column(
-              children: renderedChildren,
-            )
-          : Row(children: renderedChildren),
-    );
+    return renderedChildren;
   }
 }

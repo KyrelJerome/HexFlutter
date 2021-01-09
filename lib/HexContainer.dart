@@ -11,9 +11,10 @@ class HexagonContainer extends StatelessWidget {
   final double width;
   final Color foregroundColor;
   final Widget child;
-
+  final HexType type;
   const HexagonContainer(
       {Key key,
+      this.type = HexType.Full,
       @required this.height,
       @required this.width,
       @required this.foregroundColor,
@@ -22,10 +23,11 @@ class HexagonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double usedWidth = this.type == HexType.Full? 1: 0.5; 
     return ClipPath(
-      clipper: HexagonClipper(Size(height, width)),
+      clipper: HexagonClipper(Size(height, width*usedWidth),type: this.type),
       child: Container(
-        width: this.width,
+        width: this.width*usedWidth,
         height: this.height,
         color: this.foregroundColor,
         child: this.child,

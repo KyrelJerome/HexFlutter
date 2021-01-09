@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
-
-import 'HexContainer.dart';
 import 'HexagonFlex.dart';
 
 void main() {
@@ -46,10 +42,33 @@ class MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ListView(
+    return Scaffold(
+      body: ListView(
         children: [
-          HexagonFlex(8, children:[Center(child: Text("Kyrel"))]),
+          HexagonFlex(
+            7,
+            isOffset: true,
+            childIndices: [0, 2],
+            children: [
+              Center(
+                child: Text("Kyrel"),
+              ),
+              Center(
+                child: Text("Kyrel"),
+              ),
+            ],
+          ),
+          Align(
+            heightFactor: 0.5,
+            child: HexagonFlex(
+              8,
+              children: [
+                Center(
+                  child: Text("Kyrel"),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

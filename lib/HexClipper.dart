@@ -10,12 +10,17 @@ class HexagonClipper extends CustomClipper<Path> {
   final HexType type;
   final Size size;
 
-  HexagonClipper(this.size) : type = HexType.Full;
+  HexagonClipper(this.size,{this.type = HexType.Full});
 
   @override
   Path getClip(Size size) {
-    Path path = getSimpleHexPath(size, type);
-    return path;
+    if(type==HexType.LeftHalf){
+      return getLeftHexPath(size, type);
+    }
+    else if(type==HexType.RightHalf){
+      return getRightHexPath(size, type);
+    }
+    return getSimpleHexPath(size, type);
   }
 
   @override
