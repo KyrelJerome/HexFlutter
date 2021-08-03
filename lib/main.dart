@@ -42,34 +42,58 @@ class MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
+    int numCols = 12;
+    List<Widget> listRows = List();
+    for (int i = 0; i < 10; i++) {
+      listRows.add(HexagonFlex(
+        numCols - 1,
+        isOffset: true,
+        childIndices: [0, 3, 5,9],
         children: [
-          HexagonFlex(
-            7,
-            isOffset: true,
-            childIndices: [0, 2],
+          Container(child: IconButton(icon: Icon(Icons.ac_unit), onPressed: () {  },)),
+          Container(
+            color:Colors.green,
+            child: Center(
+              child: Text("TestTile"),
+            ),
+          ),
+          Center(
+            child: Text("TestTile"),
+          ),
+          Center(
+            child: Text("TestTile3"),
+          ),
+        ],
+      ));
+      listRows.add(
+        Align(
+          heightFactor: 0.459,
+          child: HexagonFlex(
+            numCols,
             children: [
               Center(
-                child: Text("Kyrel"),
+                child: Text("TestTile"),
               ),
               Center(
-                child: Text("Kyrel"),
+                child: Text("TestTile"),
+              ),
+              
+              Center(
+                child: Text("TestTile"),
+              ),
+              
+              Center(
+                child: Text("TestTile"),
               ),
             ],
           ),
-          Align(
-            heightFactor: 0.5,
-            child: HexagonFlex(
-              8,
-              children: [
-                Center(
-                  child: Text("Kyrel"),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
+      );
+    }
+    return Scaffold(
+      body: ListView(
+        cacheExtent: 300,
+        children: listRows,
       ),
     );
   }

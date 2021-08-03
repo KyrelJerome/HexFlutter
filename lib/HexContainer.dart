@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexagonCardChain/HexBorder.dart';
 
 import 'HexClipper.dart';
 import 'HexShapeUtils.dart';
@@ -23,13 +24,22 @@ class HexagonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double usedWidth = this.type == HexType.Full? 1: 0.5; 
+    double usedWidth = this.type == HexType.Full ? 1 : 0.5;
     return ClipPath(
-      clipper: HexagonClipper(Size(height, width*usedWidth),type: this.type),
+      clipper: HexagonClipper(
+        Size(height, width * usedWidth),
+        type: this.type,
+      ),
       child: Container(
-        width: this.width*usedWidth,
+        decoration: ShapeDecoration(
+            shape: Border.all(
+          color: Colors.orangeAccent,
+          width: 5,
+
+        )),
+        width: this.width * usedWidth,
         height: this.height,
-        color: this.foregroundColor,
+        //color: this.foregroundColor,
         child: this.child,
       ),
     );

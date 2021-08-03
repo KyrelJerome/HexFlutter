@@ -14,12 +14,6 @@ class HexagonClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    if(type==HexType.LeftHalf){
-      return getLeftHexPath(size, type);
-    }
-    else if(type==HexType.RightHalf){
-      return getRightHexPath(size, type);
-    }
     return getSimpleHexPath(size, type);
   }
 

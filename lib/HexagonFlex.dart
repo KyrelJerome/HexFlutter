@@ -28,7 +28,7 @@ class HexagonFlex extends StatelessWidget {
       this.orientation = Orientation.landscape})
       : assert(children.length >= childIndices.length),
         assert(
-          children.length < totalHex + (isOffset ? 1 : 0),
+          children.length < totalHex + 1,
         );
 
   @override
@@ -49,9 +49,7 @@ class HexagonFlex extends StatelessWidget {
       tileWidth,
       widthToHeight(tileHeight),
     );
-    // Build Hexagon Row
-    print("Size:" + tileWidth.toString());
-    print("Objects made:" + renderedChildren.length.toString());
+    // Add horizontal Offset if required.
     if (isOffset) {
       renderedChildren.insert(
         0,
@@ -71,10 +69,6 @@ class HexagonFlex extends StatelessWidget {
         ),
       );
     }
-    // size = h/2
-    // size = w/sqrt(3)
-    // => h/2 = w/sqrt(3)
-    // => h = 2w/sqrt(3)
     return Container(
       height: widthToHeight(tileWidth),
       width: tileWidth * hexDrawn,
@@ -86,6 +80,7 @@ class HexagonFlex extends StatelessWidget {
     );
   }
 
+  // Obtains the height required for a hexagon of width X
   double widthToHeight(double width) {
     return 2 * width / sqrt(3);
   }
@@ -97,8 +92,6 @@ class HexagonFlex extends StatelessWidget {
       //Pad beginning
       int pad = (totalHex - children.length) ~/ 2;
       trueChildIndices = List.generate(children.length, (index) => pad + index);
-      print("pad: $pad");
-      print("children: $children");
     }
     return trueChildIndices;
   }
@@ -112,7 +105,7 @@ class HexagonFlex extends StatelessWidget {
           childIndex < children.length &&
           i == trueChildIndices[childIndex]) {
         renderedChildren.add(HexagonContainer(
-          foregroundColor: Colors.blue,
+          foregroundColor: Colors.white,
           height: tileHeight,
           width: tileWidth,
           child: children[childIndex],
